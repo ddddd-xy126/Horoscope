@@ -1,7 +1,8 @@
 <template>
     <div class="home-container">
         <!-- 背景切换组件 -->
-        <BackgroundChanger />
+        <!-- <BackgroundChanger /> -->
+        <HomeView />
 
         <!-- 主要内容区域 -->
         <div class="main-content">
@@ -58,6 +59,7 @@ import { ref, onMounted } from 'vue'
 import StarSelector from '@/components/StarSelector.vue'
 import HoroscopeCard from '@/components/HoroscopeCardNew.vue'
 import BackgroundChanger from '@/components/BackgroundChanger.vue'
+import HomeView from './HomeView.vue'
 import { getHoroscope } from '@/api/horoscope'
 import type { HoroscopeItem, DateType } from '@/api/types'
 
