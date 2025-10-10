@@ -57,4 +57,4 @@ export interface ConstellationOption {
 }
 
 // 日期类型
-export type DateType = 'today' | 'tomorrow';
+export type DateType = 'today' | 'other';

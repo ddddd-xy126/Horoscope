@@ -31,14 +31,22 @@ api.interceptors.response.use(
 // 获取星座运势
 export const getHoroscope = async (
   astro: string,
+  date?: string,
   apiKey: string = '251b6d9ae33c107e74d5e3d89ebd6ea1'
 ): Promise<ApiResponse<ApiResult>> => {
   try {
+    const params: any = {
+      key: apiKey,
+      astro,
+    };
+    
+    // 如果提供了日期参数，则添加到请求中
+    if (date) {
+      params.date = date;
+    }
+    
     const response = await api.get<any, ApiResponse<ApiResult>>('/star/index', {
-      params: {
-        key: apiKey,
-        astro,
-      },
+      params,
     });
     return response;
   } catch (error) {

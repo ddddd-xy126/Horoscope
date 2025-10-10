@@ -5,7 +5,7 @@
       <template #header>
         <div class="card-header">
           <h2 class="constellation-title">
-            <span class="constellation-icon">{{ getConstellationIcon(selectedConstellation) }}</span>
+            <span class="constellation-icon">{{ getConstellationIcon(selectedConstellation || '') }}</span>
             {{ selectedConstellation }}
           </h2>
           <p class="date-info">{{ getCurrentDate() }}</p>
@@ -49,8 +49,8 @@
             type="circle"
             :percentage="getOverallScore()"
             :color="getScoreColor(getOverallScore())"
-            :width="120"
-            :stroke-width="8"
+            :width="80"
+            :stroke-width="6"
           >
             <template #default="{ percentage }">
               <span class="score-text">{{ percentage }}%</span>
@@ -188,6 +188,8 @@ const props = defineProps<{
   horoscopeData?: HoroscopeItem[]
   loading?: boolean
   selectedConstellation?: string
+  selectedDate?: string
+  customDate?: string
 }>()
 
 // 获取星座图标
@@ -271,6 +273,11 @@ const getScoreColor = (score: number): string => {
 
 // 获取当前日期
 const getCurrentDate = (): string => {
+  if (props.selectedDate === 'other' && props.customDate) {
+    // 如果是其他日运势且已选择日期，显示选择的日期
+    return new Date(props.customDate).toLocaleDateString('zh-CN')
+  }
+  // 默认显示今天的日期
   return new Date().toLocaleDateString('zh-CN')
 }
 
@@ -378,31 +385,31 @@ const getColorValue = (colorName: string): string => {
 
 <style lang="scss" scoped>
 .horoscope-card {
-  max-width: 600px;
+  max-width: 450px;
   margin: 0 auto;
 
   .fortune-card {
     background: $bg-card;
     border: none;
-    border-radius: $border-radius-large;
+    border-radius: $border-radius-medium;
     box-shadow: $shadow-medium;
     backdrop-filter: blur(20px);
     transition: all 0.3s ease;
 
     &:hover {
-      transform: translateY(-5px);
+      transform: translateY(-3px);
       box-shadow: $shadow-heavy;
     }
 
     :deep(.el-card__header) {
       background: linear-gradient(135deg, $primary-color, $secondary-color);
       border-bottom: none;
-      border-radius: $border-radius-large $border-radius-large 0 0;
-      padding: $spacing-lg;
+      border-radius: $border-radius-medium $border-radius-medium 0 0;
+      padding: $spacing-md;
     }
 
     :deep(.el-card__body) {
-      padding: $spacing-lg;
+      padding: $spacing-md;
     }
   }
 
@@ -412,41 +419,41 @@ const getColorValue = (colorName: string): string => {
 
     .constellation-title {
       margin: 0;
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: $spacing-sm;
+      gap: $spacing-xs;
 
       .constellation-icon {
-        font-size: 28px;
+        font-size: 22px;
       }
     }
 
     .date-info {
-      margin: $spacing-sm 0 0;
-      font-size: 14px;
+      font-size: 12px;
       opacity: 0.9;
+      margin-top: $spacing-xs;
     }
   }
 
   .fortune-list {
-    margin-bottom: $spacing-xl;
+    margin-bottom: $spacing-md;
 
     .fortune-item {
       display: flex;
       align-items: center;
-      gap: $spacing-md;
-      padding: $spacing-md;
-      margin-bottom: $spacing-sm;
+      gap: $spacing-sm;
+      padding: $spacing-sm;
+      margin-bottom: $spacing-xs;
       background: rgba(255, 255, 255, 0.5);
-      border-radius: $border-radius-medium;
+      border-radius: $border-radius-small;
       transition: all 0.2s ease;
 
       &:hover {
         background: rgba(255, 255, 255, 0.8);
-        transform: translateY(-2px);
+        transform: translateY(-1px);
       }
 
       &.love {
@@ -470,7 +477,7 @@ const getColorValue = (colorName: string): string => {
       }
 
       .fortune-icon {
-        font-size: 24px;
+        font-size: 18px;
         flex-shrink: 0;
       }
 
@@ -479,7 +486,7 @@ const getColorValue = (colorName: string): string => {
 
         .fortune-label {
           display: block;
-          font-size: 16px;
+          font-size: 14px;
           font-weight: 600;
           color: $text-primary;
           margin-bottom: $spacing-xs;
@@ -489,24 +496,28 @@ const getColorValue = (colorName: string): string => {
           .fortune-bar {
             display: flex;
             align-items: center;
-            gap: $spacing-sm;
+            gap: $spacing-xs;
 
             :deep(.el-progress) {
               flex: 1;
+              
+              .el-progress-bar__outer {
+                height: 4px !important;
+              }
             }
 
             .fortune-value {
-              font-size: 16px;
+              font-size: 13px;
               font-weight: 600;
               color: $text-primary;
-              min-width: 50px;
+              min-width: 35px;
             }
           }
 
           .fortune-text {
-            font-size: 15px;
+            font-size: 13px;
             color: $text-secondary;
-            line-height: 1.5;
+            line-height: 1.4;
             display: block;
           }
         }
@@ -516,21 +527,26 @@ const getColorValue = (colorName: string): string => {
 
   .overall-fortune {
     text-align: center;
-    margin-bottom: $spacing-lg;
-    padding: $spacing-lg;
+    margin-bottom: $spacing-md;
+    padding: $spacing-md;
     background: rgba(139, 126, 216, 0.1);
-    border-radius: $border-radius-medium;
+    border-radius: $border-radius-small;
 
     .section-title {
-      margin: 0 0 $spacing-lg;
-      font-size: 18px;
+      margin: 0 0 $spacing-md;
+      font-size: 16px;
       color: $text-primary;
       font-weight: 600;
     }
 
     .fortune-score {
+      :deep(.el-progress-circle) {
+        width: 80px !important;
+        height: 80px !important;
+      }
+
       .score-text {
-        font-size: 18px;
+        font-size: 14px;
         font-weight: 600;
         color: $text-primary;
       }
@@ -538,32 +554,32 @@ const getColorValue = (colorName: string): string => {
   }
 
   .detailed-fortune {
-    margin-bottom: $spacing-lg;
+    margin-bottom: $spacing-md;
 
     .section-title {
-      margin: 0 0 $spacing-md;
-      font-size: 18px;
+      margin: 0 0 $spacing-sm;
+      font-size: 16px;
       color: $text-primary;
       font-weight: 600;
     }
 
     .fortune-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: $spacing-md;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: $spacing-sm;
 
       .fortune-item {
         display: flex;
         align-items: center;
-        gap: $spacing-md;
-        padding: $spacing-md;
+        gap: $spacing-xs;
+        padding: $spacing-sm;
         background: rgba(255, 255, 255, 0.5);
-        border-radius: $border-radius-medium;
+        border-radius: $border-radius-small;
         transition: all 0.2s ease;
 
         &:hover {
           background: rgba(255, 255, 255, 0.8);
-          transform: translateY(-2px);
+          transform: translateY(-1px);
         }
 
         &.love {
@@ -583,7 +599,7 @@ const getColorValue = (colorName: string): string => {
         }
 
         .fortune-icon {
-          font-size: 24px;
+          font-size: 16px;
           flex-shrink: 0;
         }
 
@@ -592,7 +608,7 @@ const getColorValue = (colorName: string): string => {
 
           .fortune-label {
             display: block;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
             color: $text-primary;
             margin-bottom: $spacing-xs;
@@ -601,17 +617,21 @@ const getColorValue = (colorName: string): string => {
           .fortune-bar {
             display: flex;
             align-items: center;
-            gap: $spacing-sm;
+            gap: $spacing-xs;
 
             :deep(.el-progress) {
               flex: 1;
+              
+              .el-progress-bar__outer {
+                height: 3px !important;
+              }
             }
 
             .fortune-value {
-              font-size: 14px;
+              font-size: 11px;
               font-weight: 600;
               color: $text-primary;
-              min-width: 40px;
+              min-width: 30px;
             }
           }
         }
@@ -620,49 +640,49 @@ const getColorValue = (colorName: string): string => {
   }
 
   .lucky-info {
-    margin-bottom: $spacing-lg;
+    margin-bottom: $spacing-md;
 
     .section-title {
-      margin: 0 0 $spacing-md;
-      font-size: 18px;
+      margin: 0 0 $spacing-sm;
+      font-size: 16px;
       color: $text-primary;
       font-weight: 600;
     }
 
     .lucky-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: $spacing-md;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: $spacing-sm;
 
       .lucky-item {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: $spacing-md;
+        padding: $spacing-sm;
         background: rgba(255, 255, 255, 0.5);
-        border-radius: $border-radius-medium;
+        border-radius: $border-radius-small;
         transition: all 0.2s ease;
 
         &:hover {
           background: rgba(255, 255, 255, 0.8);
-          transform: translateY(-2px);
+          transform: translateY(-1px);
         }
 
         .lucky-label {
-          font-size: 16px;
+          font-size: 13px;
           font-weight: 600;
           color: $text-primary;
         }
 
         .lucky-value {
-          font-size: 16px;
+          font-size: 13px;
           font-weight: 600;
 
           &.number {
             color: #faad14;
             background: rgba(250, 173, 20, 0.1);
-            padding: 4px 8px;
-            border-radius: 4px;
+            padding: 2px 6px;
+            border-radius: 3px;
           }
 
           &.color {
@@ -676,21 +696,21 @@ const getColorValue = (colorName: string): string => {
 
   .fortune-summary {
     .section-title {
-      margin: 0 0 $spacing-md;
-      font-size: 18px;
+      margin: 0 0 $spacing-sm;
+      font-size: 16px;
       color: $text-primary;
       font-weight: 600;
     }
 
     .summary-text {
       margin: 0;
-      font-size: 16px;
+      font-size: 13px;
       color: $text-secondary;
-      line-height: 1.6;
-      padding: $spacing-md;
+      line-height: 1.5;
+      padding: $spacing-sm;
       background: rgba(255, 255, 255, 0.3);
-      border-radius: $border-radius-medium;
-      border-left: 4px solid $primary-color;
+      border-radius: $border-radius-small;
+      border-left: 3px solid $primary-color;
     }
   }
 }

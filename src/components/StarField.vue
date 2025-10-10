@@ -18,7 +18,7 @@ onMounted(() => {
   scene.background = new THREE.Color(0x160016)
 
   const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000)
-  camera.position.set(0, 4, 21)
+  camera.position.set(0, 16, 31)
 
   /** ================= 渲染器 ================= */
   const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -76,7 +76,7 @@ onMounted(() => {
     transparent: true,
     depthTest: false,
     blending: THREE.AdditiveBlending,
-     vertexColors: true
+    vertexColors: true
   })
   material.onBeforeCompile = (shader: any) => {
     shader.uniforms.time = gu.time
@@ -86,7 +86,8 @@ onMounted(() => {
         uniform float time;
         attribute float sizes;
         attribute vec4 shift;
-        varying vec3 vColor;
+        // define two-pi constant used below
+        const float PI2 = 6.283185307179586;
         ${shader.vertexShader}
       `
       .replace(`gl_PointSize = size;`, `gl_PointSize = size * sizes;`)
@@ -116,7 +117,7 @@ onMounted(() => {
 
     // 片元着色器
     shader.fragmentShader = `
-        varying vec3 vColor;
+        float d;
         ${shader.fragmentShader}
       `
       .replace(
