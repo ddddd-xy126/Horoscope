@@ -1,7 +1,7 @@
 <template>
   <div class="home-container">
     <!-- 背景组件 -->
-    <HomeView class="background-view" />
+    <StarField class="background-view" />
 
     <!-- 主要内容区域 - 左右布局 -->
     <div class="main-content">
@@ -169,7 +169,7 @@
 import { ref, onMounted } from "vue";
 import StarSelector from "@/components/StarSelector.vue";
 import HoroscopeCard from "@/components/HoroscopeCardNew.vue";
-import HomeView from "./HomeView.vue";
+import StarField from "@/components/StarField.vue";
 import { getHoroscope } from "@/api/horoscope";
 import type { HoroscopeItem, DateType } from "@/api/types";
 
