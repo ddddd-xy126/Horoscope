@@ -169,7 +169,7 @@
 import { ref, onMounted } from "vue";
 import StarSelector from "@/components/StarSelector.vue";
 import HoroscopeCard from "@/components/HoroscopeCardNew.vue";
-import StarField from "@/components/StarField.vue";
+import StarField from "@/components/StarField.vue"
 import { getHoroscope } from "@/api/horoscope";
 import type { HoroscopeItem, DateType } from "@/api/types";
 
@@ -186,6 +186,7 @@ const horoscopeCardRef = ref<InstanceType<typeof HoroscopeCard> | null>(null);
 
 // 从卡片组件获取概述信息
 const getSummaryFromCard = (): string => {
+  // 调用子组件的方法获取概述信息
   if (
     horoscopeCardRef.value &&
     typeof horoscopeCardRef.value.getSummary === "function"

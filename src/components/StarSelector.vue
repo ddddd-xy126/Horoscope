@@ -32,7 +32,7 @@ const emit = defineEmits<{
   change: [constellation: string]
 }>()
 
-// 响应式数据
+// 响应式选择状态
 const selectedConstellation = ref<string>('')
 
 // 星座数据
