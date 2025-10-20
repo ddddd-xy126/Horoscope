@@ -820,7 +820,7 @@ onMounted(() => {
   text-align: center;
   position: absolute;
   bottom: 0;
-  left: 50%;
+  left: 42%;
   z-index: 1;
   flex-shrink: 0;
 
